@@ -28,9 +28,9 @@ int randomness;
 // Methods
 // Main executable
 int main(int argc, char **argv) {
-    // random seed for random variables
-    srand( time(NULL) );
-    // assigning command line args to variables
+    // Random seed for random variables
+    srand(time(NULL));
+    // Assigning command line args to variables
     if (argc >= 7){
       numPeople = atoi(argv[1]);
       numRobots = atoi(argv[2]);
@@ -54,7 +54,8 @@ int main(int argc, char **argv) {
     }
     numPlayers = numPeople + numRobots;
     players = malloc((numPlayers)*sizeof(player_t));
-    // graphic stuff
+
+    // Graphics (GLUT) initialisation
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(1000, 1000);
@@ -65,10 +66,12 @@ int main(int argc, char **argv) {
     glutTimerFunc(0, timer_callback, 0);
     glutKeyboardFunc(keyToDir);
 
-    // enable up down left right if 2 human players
+    // Enable arrow keys if there are 2 human players
     if (numPeople == 2) {
         glutSpecialFunc(specialKeyToDir);
     }
+
+    // Launch graphics
     glutMainLoop();
     return EXIT_SUCCESS;
 }

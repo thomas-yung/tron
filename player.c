@@ -1,7 +1,7 @@
 // Imported Files
 #include "player.h"
 #include <stdlib.h>
-#include  <math.h>
+#include <math.h>
 
 
 // Methods
@@ -115,13 +115,12 @@ void setRobotDirection(board_t board, robot_t* robot, int randomness){
     uint8_t frontEmpty = isValidMove(board, robot->head->x + dx, robot->head->y + dy);
     uint8_t leftEmpty = isValidMove(board, robot->head->x - dy, robot->head->y + dx);
     uint8_t rightEmpty = isValidMove(board, robot->head->x + dy, robot->head->y - dx);
-    // uint8_t front2Empty = isValidMove(board, robot->head->x + dx + dx, robot->head->y + dy + dy);
-    // uint8_t left2Empty = isValidMove(board, robot->head->x - dy - dy, robot->head->y + dx + dx);
-    // uint8_t right2Empty = isValidMove(board, robot->head->x + dy + dy, robot->head->y - dx - dx);
+
     // check forward left and right 1 and 2 steps ; choose valid move if any occupied;
     if (!leftEmpty || !frontEmpty || !rightEmpty ){
         randomValidMove(board, robot);
-    } else { // otherwise move straight and 1% change to randomly move in another direction
+    } else {
+      // otherwise move straight and 1% change to randomly move in another direction
         int r = rand() % 100;
         if (r < randomness){
             randomValidMove(board, robot);
@@ -131,7 +130,6 @@ void setRobotDirection(board_t board, robot_t* robot, int randomness){
 
 
 float setRobotDirection4_(board_t board, robot_t* robot, int iteration){
-
   point_t* head = robot->head;
   dir_t* dir = robot->dir;
   if (iteration <= 0){
