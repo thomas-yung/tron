@@ -1,0 +1,14 @@
+1) Complete main.initRobots()
+2) Complete main.initBoard()
+3) Test 1) and 2)
+
+4) Write game mechanics (movement, deaths, etc)
+5) Test 4)
+
+6) Research SDL
+7) Implement main.gameLoop()
+8) Polish graphics
+9) Test 6), 7) and 8)
+
+10) Add a menu
+11) Test 10)
