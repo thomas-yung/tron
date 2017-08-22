@@ -18,7 +18,9 @@ typedef struct point {
 } point_t;
 
 // Board Struct
-typedef (point_t**) board_t;
+// NOTE: a board is a *list* of *list*s where each element is a *pointer* to
+//       a point struct
+typedef (point_t***) board_t;
 
 // Direction enumeration
 typedef struct direction {
@@ -34,6 +36,7 @@ typedef struct human {
   dir_t *dir;
   uint8_t directionChanged;
   uint8_t alive;
+  uint8_t schema;
 } human_t;
 
 // Robot Struct
@@ -48,13 +51,13 @@ typedef struct robot {
 
 // AllPlayers Struct
 typedef struct allPlayers {
-  human_t *humans;
-  robot_t *robots;
+  human_t **humans;
+  robot_t **robots;
 } allPlayers_t;
 
 // GameStatus Struct
 typedef struct gameStatus {
-  board_t board;
+  board_t *board;
   allPlayers_t *players;
 } gameStatus_t;
 
