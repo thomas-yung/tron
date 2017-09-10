@@ -136,7 +136,7 @@ void gameLoop() {
 
 void freeMemory() {
   // Free allPlayers
-  // NOTE: head point_t is removed at the same time as board is removed
+  // NOTE: point_t* head is removed at the same time as board is removed
   allPlayers_t allPlayers = *(gameStatus->players);
 
   human_t *allHumans = *(allPlayers->humans);
@@ -160,8 +160,17 @@ void freeMemory() {
   free(allPlayers);
 
   // Free board
-
-  
+  board_t *board = gameStatus->board;
+  for (int col = 0; col < boardDim; col++) {
+    for (int row = 0; row < boardDim; row++) {
+      point_t *cell = board[col][row];
+      free(cell);
+    }
+  }
+  free(board);
 
   // Free gameStatus
+  free(gameStatus);
+
+  return;
 }

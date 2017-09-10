@@ -1,5 +1,3 @@
-Complete main.freeMemory(), board
-Complete main.freeMemory(), gameStatus
 Research and create Makefile
 Test main.c
 
