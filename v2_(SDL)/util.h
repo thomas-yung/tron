@@ -6,3 +6,5 @@
 
 // Method Declarations
 void checkAllocFail(void *ptr, char *fromMethod);
+
+#endif

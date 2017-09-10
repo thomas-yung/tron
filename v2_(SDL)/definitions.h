@@ -20,7 +20,7 @@ typedef struct point {
 // Board Struct
 // NOTE: a board is a *list* of *list*s where each element is a *pointer* to
 //       a point struct
-typedef (point_t***) board_t;
+typedef point_t*** board_t;
 
 // Direction enumeration
 typedef struct direction {

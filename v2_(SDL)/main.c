@@ -1,9 +1,16 @@
 // Dependencies
 #include "definitions.h"
+#include "util.h"
 
 // Method Declarations
 int main(int argc, char **argv);
+void pollUserForParameters();
 void initialise();
+void gameLoop();
+human_t **initHumans();
+robot_t **initRobots();
+board_t *initBoard();
+void freeMemory();
 
 // Instance Variables
 int numHumans;
@@ -42,7 +49,7 @@ int main(int argc, char **argv) {
   return EXIT_SUCCESS;
 }
 
-pollUserForParameters() {
+void pollUserForParameters() {
   printf("Enter number of human players: ");
   scanf("%d", &numHumans);
   printf("Enter number of bots: ");
@@ -70,11 +77,11 @@ void initialise() {
 
   allPlayers_t *allPlayers = calloc(1, sizeof(allPlayers_t));
   checkAllocFail(allPlayers, "main.initialise, allPlayers");
-  allPlayers->players = allHuman;
+  allPlayers->humans = allHuman;
   allPlayers->robots = allBots;
   gameStatus->players = allPlayers;
 
-  board_t gameBoard = initBoard();
+  board_t *gameBoard = initBoard();
   gameStatus->board = gameBoard;
   return;
 }
@@ -101,7 +108,7 @@ robot_t **initRobots() {
   checkAllocFail(all, "main.initRobots, all");
   for (int i = 0; i < numRobots; i++) {
     robot_t *robot = calloc(1, sizeof(robot_t));
-    checkAllocFai(robot, "main.initRobots, robot");
+    checkAllocFail(robot, "main.initRobots, robot");
     robot->playerNo = numHumans + i + 1;
     robot->alive = 1;
     robot->randomness = randomness;
@@ -112,18 +119,18 @@ robot_t **initRobots() {
 
 // NOTE: board_t == point_t*** (see definitions.h for explanation)
 board_t *initBoard() {
-  board_t grid = calloc(boardDim, sizeof(point_t*));
+  board_t *grid = calloc(boardDim, sizeof(point_t*));
   checkAllocFail(grid, "main.initBoard, grid");
   for (int colNum = 0; colNum < boardDim; colNum++) {
     point_t **column = calloc(boardDim, sizeof(point_t*));
     checkAllocFail(column, "main.initBoard, column");
     for (int rowNum = 0; rowNum < boardDim; rowNum++) {
       point_t *point = calloc(1, sizeof(point_t));
-      checkAllocFail(cell, "main.initBoard, point");
+      checkAllocFail(point, "main.initBoard, point");
       point->x = rowNum;
       point->y = colNum;
       point->occupant = 0;
-      column[rowNum] = cell;
+      column[rowNum] = point;
     }
     grid[colNum] = column;
   }
