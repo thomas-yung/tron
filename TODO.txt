@@ -1,6 +1,3 @@
-Research and create Makefile
-Test main.c
-
 Write game mechanics (movement, deaths, etc)
 Test 6)
 

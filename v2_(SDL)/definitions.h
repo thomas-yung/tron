@@ -57,7 +57,7 @@ typedef struct allPlayers {
 
 // GameStatus Struct
 typedef struct gameStatus {
-  board_t *board;
+  board_t board;
   allPlayers_t *players;
 } gameStatus_t;
 

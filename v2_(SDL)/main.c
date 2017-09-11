@@ -9,7 +9,7 @@ void initialise();
 void gameLoop();
 human_t **initHumans();
 robot_t **initRobots();
-board_t *initBoard();
+board_t initBoard();
 void freeMemory();
 
 // Instance Variables
@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
   if (argc == 8) {
     // Correct number of command-line arguments given
     numHumans = atoi(argv[1]);
-    assert(numHumans == 2);
+    assert(numHumans >= 0 && numHumans <= 2);
     numRobots = atoi(argv[2]);
     aiSchema = atoi(argv[3]);
     FPS = atoi(argv[4]);
@@ -38,7 +38,15 @@ int main(int argc, char **argv) {
     boardDim = atoi(argv[6]);
     randomness = atoi(argv[7]);
   } else {
-    pollUserForParameters();
+    // pollUserForParameters();
+    printf("Let's pretend the parameters are in...\n");
+    numHumans = 2;
+    numRobots = 8;
+    aiSchema = 1;
+    FPS = 16;
+    holeFreq = 10;
+    boardDim = 100;
+    randomness = 90;
   }
 
   initialise();
@@ -52,6 +60,7 @@ int main(int argc, char **argv) {
 void pollUserForParameters() {
   printf("Enter number of human players: ");
   scanf("%d", &numHumans);
+  assert(numHumans >= 0 && numHumans <= 2);
   printf("Enter number of bots: ");
   scanf("%d", &numRobots);
   printf("Enter AI schema (0 to 1 inclusive)");
@@ -73,6 +82,7 @@ void initialise() {
   checkAllocFail(gameStatus, "main.initialise, gameStatus");
 
   human_t **allHuman = initHumans();
+
   robot_t **allBots = initRobots();
 
   allPlayers_t *allPlayers = calloc(1, sizeof(allPlayers_t));
@@ -81,7 +91,7 @@ void initialise() {
   allPlayers->robots = allBots;
   gameStatus->players = allPlayers;
 
-  board_t *gameBoard = initBoard();
+  board_t gameBoard = initBoard();
   gameStatus->board = gameBoard;
   return;
 }
@@ -93,8 +103,8 @@ human_t **initHumans() {
     human_t *player = calloc(1, sizeof(human_t));
     checkAllocFail(player, "main.initHumans, player");
     printf("Player %d: enter your name...\n", (i + 1));
-    char *name;
-    scanf("%s\n", name);
+    char *name = calloc(20, sizeof(char));
+    scanf("%s", name);
     player->name = name;
     player->playerNo = i + 1;
     player->alive = 1;
@@ -118,47 +128,58 @@ robot_t **initRobots() {
 }
 
 // NOTE: board_t == point_t*** (see definitions.h for explanation)
-board_t *initBoard() {
-  board_t *grid = calloc(boardDim, sizeof(point_t*));
-  checkAllocFail(grid, "main.initBoard, grid");
+board_t initBoard() {
+  board_t board = calloc(boardDim, sizeof(point_t**));
+  checkAllocFail(board, "main.initBoard, board");
   for (int colNum = 0; colNum < boardDim; colNum++) {
     point_t **column = calloc(boardDim, sizeof(point_t*));
     checkAllocFail(column, "main.initBoard, column");
     for (int rowNum = 0; rowNum < boardDim; rowNum++) {
       point_t *point = calloc(1, sizeof(point_t));
       checkAllocFail(point, "main.initBoard, point");
-      point->x = rowNum;
-      point->y = colNum;
+      point->x = colNum;
+      point->y = rowNum;
       point->occupant = 0;
       column[rowNum] = point;
     }
-    grid[colNum] = column;
+    board[colNum] = column;
   }
-  return grid;
+  return board;
 }
 
 void gameLoop() {
-  printf("In gameLoop\n");
+  printf("\nIn gameLoop\n\n");
+
+  // while (1) {
+  //   printf("Give x then y (boardDim=%d)\n", boardDim);
+  //   int x;
+  //   int y;
+  //   scanf("%d", &x);
+  //   scanf("%d", &y);
+  //   printf("x: %d, y: %d, occupant: %d\n", ((gameStatus->board)[x][y])->x,((gameStatus->board)[x][y])->y,((gameStatus->board)[x][y])->occupant);
+  // }
+
 }
 
 void freeMemory() {
   // Free allPlayers
   // NOTE: point_t* head is removed at the same time as board is removed
-  allPlayers_t allPlayers = *(gameStatus->players);
+  allPlayers_t *allPlayers = gameStatus->players;
 
-  human_t *allHumans = *(allPlayers->humans);
+  human_t **allHumans = allPlayers->humans;
+
   for (int i = 0; i < numHumans; i++) {
-    human_t oneHuman = *(allHumans[i]);
+    human_t *oneHuman = allHumans[i];
     free(oneHuman->name);
     free(oneHuman->dir);
     free(oneHuman);
+
   }
   free(allHumans);
 
-  robot_t *allRobots = *(allPlayers->robots);
+  robot_t **allRobots = allPlayers->robots;
   for (int i = 0; i < numRobots; i++) {
-    human_t oneRobot = *(allRobots[i]);
-    free(oneRobot->name);
+    robot_t *oneRobot = allRobots[i];
     free(oneRobot->dir);
     free(oneRobot);
   }
@@ -166,14 +187,18 @@ void freeMemory() {
 
   free(allPlayers);
 
-  // Free board
-  board_t *board = gameStatus->board;
+  // Free board (NOTE: WHY DOES THIS ONLY WORK IN REVERSE)
+  board_t board = gameStatus->board;
   for (int col = 0; col < boardDim; col++) {
     for (int row = 0; row < boardDim; row++) {
       point_t *cell = board[col][row];
+      // printf("\tHere 1     col=%d, row=%d\n", col, row);
       free(cell);
+      // printf("\t  Here 2   col=%d, row=%d\n\n", col, row);
     }
+    free(board[col]);
   }
+
   free(board);
 
   // Free gameStatus
