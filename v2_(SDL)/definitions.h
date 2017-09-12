@@ -51,7 +51,9 @@ typedef struct robot {
 
 // AllPlayers Struct
 typedef struct allPlayers {
+  int numHumans;
   human_t **humans;
+  int numRobots;
   robot_t **robots;
 } allPlayers_t;
 
@@ -59,6 +61,7 @@ typedef struct allPlayers {
 typedef struct gameStatus {
   board_t board;
   allPlayers_t *players;
+  int playersAlive;
 } gameStatus_t;
 
 #endif

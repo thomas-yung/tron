@@ -1,10 +1,10 @@
 Write game mechanics (movement, deaths, etc)
-Test 6)
+Test
 
 Research SDL
 Implement main.gameLoop()
 Polish graphics
-Test 10), 11) and 12)
+Test
 
 Add a menu
-Test 14)
+Test
