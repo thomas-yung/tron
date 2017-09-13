@@ -2,12 +2,15 @@
 CC = gcc
 
 # Define the compilation flags (-g -O0 are for Valgrind)
-CFLAGS = -c -g -O0 -Wall -Werror -pedantic -std=c99
+CFLAGS = -c -g -O0 -Wall -Werror -pedantic -std=c99 -lSDL2
+
+# Define linking flags (-lSDL2 is for the graphics library, SDL)
+LFLAGS = -lSDL2
 
 all: tron
 
 tron: main.o util.o human.o robot.o board.o
-	$(CC) main.o util.o human.o robot.o board.o -o tron
+	$(CC) $^ $(LFLAGS) -o $@
 
 main.o: main.c definitions.h util.o
 	$(CC) $(CFLAGS) main.c
