@@ -34,6 +34,7 @@ int moveHuman(gameStatus_t *game, human_t *player) {
   head = getPoint(board, newCol, newRow);
   if (getOccupant(board, newCol, newRow)) {
     setOccupant(board, newCol, newRow, playerNo);
+    player->directionChanged = 0;
     return 1;
   } else {
     player->alive = 0;
@@ -45,7 +46,7 @@ int moveHuman(gameStatus_t *game, human_t *player) {
 
 // Sets human direction iff it is valid (not going back on itself)
 void setHumanDirection(human_t *player, dir_t *newDir) {
-  if (player->directionChanged) {
+  if (!(player->directionChanged)) {
     dir_t *current = player->dir;
     uint8_t currentDX = current->dX;
     uint8_t currentDY = current->dY;
@@ -54,13 +55,13 @@ void setHumanDirection(human_t *player, dir_t *newDir) {
       // Player is facing vertically
       if (currentDY != -1 * (newDir->dY)) {
         player->dir = newDir;
-        player->directionChanged = 0;
+        player->directionChanged = 1;
       }
     } else if (!currentDY) {
       // Player is facing horizontally
       if (currentDX != -1 * (newDir->dX)) {
         player->dir = newDir;
-        player->directionChanged = 0;
+        player->directionChanged = 1;
       }
     }
   }

@@ -104,6 +104,9 @@ void initialise() {
   gameStatus->playersAlive = numHumans + numRobots;
 
   gameStatus->graphics = initGraphicsStruct();
+
+  // Place players on board and assign colours
+  
   return;
 }
 
@@ -124,12 +127,23 @@ void gameLoop() {
   // main loop
   while (gameStatus->playersAlive > 1 && !quit) {
 
-
     while (SDL_PollEvent(&e)) {
       quit = handleEvent(gameStatus, &e);
     }
 
     // Simulate one move
+    for (int i = 0; i < numHumans; i++) {
+      human_t *oneHuman = (gameStatus->players->humans)[i];
+      if (oneHuman->alive) {
+        moveHuman(gameStatus, oneHuman);
+      }
+    }
+    for (int i = 0; i < numRobots; i++) {
+      robot_t *oneRobot = (gameStatus->players->robots)[numHumans + i];
+      if (oneRobot->alive) {
+        moveRobot(gameStatus, oneRobot, aiSchema);
+      }
+    }
 
     // set render colour and clear window
     // draw rects

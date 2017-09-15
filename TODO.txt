@@ -1,5 +1,7 @@
+Initialise:
+  set position and colors
+
 Main loop:
-  Simulate one movement forwards
   set render colour and clear window
   draw rects
   update

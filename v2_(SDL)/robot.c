@@ -18,14 +18,15 @@ robot_t **initRobots(int numRobots, int numHumans, int randomness) {
 }
 
 // Autonomously decide and set the new direction
-void setDirection(robot_t *player, int schema) {
+void chooseDirection(robot_t *player, int schema) {
   return;
 }
 
 // Move the robot by one space in the direction it is facing
 // The value returned indicates if the player survives this move
 // 0 for death, non-zero for survival
-int moveRobot(gameStatus_t *game, robot_t *player) {
+int moveRobot(gameStatus_t *game, robot_t *player, int aiSchema) {
+  chooseDirection(player, aiSchema);
   point_t *head = player->head;
   dir_t *dir = player->dir;
   board_t board = game->board;
