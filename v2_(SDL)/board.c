@@ -5,13 +5,13 @@
 // Initialise the board, setting every cell to having an occupant of 0 (empty)
 board_t initBoard(int boardDim) {
   board_t board = calloc(boardDim, sizeof(point_t**));
-  checkAllocFail(board, "board.c.initBoard, board");
+  checkPtrNull(board, "board.c.initBoard, board");
   for (int colNum = 0; colNum < boardDim; colNum++) {
     point_t **column = calloc(boardDim, sizeof(point_t*));
-    checkAllocFail(column, "board,c.initBoard, column");
+    checkPtrNull(column, "board,c.initBoard, column");
     for (int rowNum = 0; rowNum < boardDim; rowNum++) {
       point_t *point = calloc(1, sizeof(point_t));
-      checkAllocFail(point, "board.c.initBoard, point");
+      checkPtrNull(point, "board.c.initBoard, point");
       point->x = colNum;
       point->y = rowNum;
       point->occupant = 0;

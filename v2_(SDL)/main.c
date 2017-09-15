@@ -4,7 +4,7 @@
 #include "human.h"
 #include "robot.h"
 #include "board.h"
-#include <SDL2/SDL.h>
+#include "gui.h"
 
 // Method Declarations
 int main(int argc, char **argv);
@@ -22,6 +22,9 @@ int FPS;
 int holeFreq;
 int boardDim;
 int randomness;
+
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
 gameStatus_t *gameStatus;
 
@@ -81,14 +84,14 @@ void pollUserForParameters() {
 void initialise() {
   // Initialise gameStatus memory
   gameStatus = calloc(1, sizeof(gameStatus_t));
-  checkAllocFail(gameStatus, "main.initialise, gameStatus");
+  checkPtrNull(gameStatus, "main.initialise, gameStatus");
 
   human_t **allHuman = initHumans(numHumans);
 
   robot_t **allBots = initRobots(numRobots, numHumans, randomness);
 
   allPlayers_t *allPlayers = calloc(1, sizeof(allPlayers_t));
-  checkAllocFail(allPlayers, "main.initialise, allPlayers");
+  checkPtrNull(allPlayers, "main.initialise, allPlayers");
   allPlayers->numHumans = numHumans;
   allPlayers->humans = allHuman;
   allPlayers->numRobots = numRobots;
@@ -99,42 +102,41 @@ void initialise() {
   gameStatus->board = gameBoard;
 
   gameStatus->playersAlive = numHumans + numRobots;
+
+  gameStatus->graphics = initGraphicsStruct();
   return;
 }
 
 void gameLoop() {
-  printf("\nIn gameLoop\n\n");
+  printf("\nStarting game, (in gameLoop)\n\n");
 
-  SDL_Window *window = NULL;
-  SDL_Surface *screenSurface = NULL;
-
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("SDL_Init error: %s\n", SDL_GetError());
-  } else {
-    window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 500, 500, SDL_WINDOW_SHOWN);
-    if( window == NULL )
-    {
-        printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-    } else {
-      //Get window surface
-      screenSurface = SDL_GetWindowSurface( window );
-
-      //Fill the surface white
-      SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-
-      //Update the surface
-      SDL_UpdateWindowSurface( window );
-
-      //Wait two seconds
-      SDL_Delay( 2000 );
-
-      //Destroy window
-      SDL_DestroyWindow( window );
-
-      //Quit SDL subsystems
-      SDL_Quit();
-    }
+  // Initialise library, create window and renderer
+  // and set texture filtering (to linear)
+  if (!initGUI(gameStatus->graphics, SCREEN_WIDTH, SCREEN_HEIGHT)) {
+    printf("Could not initialise GUI, quitting...\n");
+    exit(EXIT_FAILURE);
   }
+
+  // Initialise event holder
+  SDL_Event e;
+
+  int quit = 0;
+  // main loop
+  while (gameStatus->playersAlive > 1 && !quit) {
+
+
+    while (SDL_PollEvent(&e)) {
+      quit = handleEvent(gameStatus, &e);
+    }
+
+    // Simulate one move
+
+    // set render colour and clear window
+    // draw rects
+    // update
+
+  }
+}
 
 
 
@@ -147,7 +149,7 @@ void gameLoop() {
   //   printf("x: %d, y: %d, occupant: %d\n", ((gameStatus->board)[x][y])->x,((gameStatus->board)[x][y])->y,((gameStatus->board)[x][y])->occupant);
   // }
 
-}
+
 
 void freeMemory() {
   // Free allPlayers
@@ -169,6 +171,11 @@ void freeMemory() {
   board_t board = gameStatus->board;
   freeBoard(board, boardDim);
   free(board);
+
+  // Free graphics
+  graphics_t *graphics = gameStatus->graphics;
+  freeGraphics(graphics);
+  free(graphics);
 
   // Free gameStatus
   free(gameStatus);

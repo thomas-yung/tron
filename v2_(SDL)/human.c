@@ -6,10 +6,10 @@
 // which is returned to the caller.
 human_t **initHumans(int numHumans) {
   human_t **all = calloc(numHumans, sizeof(human_t*));
-  checkAllocFail(all, "main.initHumans, all");
+  checkPtrNull(all, "main.initHumans, all");
   for (int i = 0; i < numHumans; i++) {
     human_t *player = calloc(1, sizeof(human_t));
-    checkAllocFail(player, "main.initHumans, player");
+    checkPtrNull(player, "main.initHumans, player");
     printf("Player %d: enter your name...\n", (i + 1));
     char *name = calloc(20, sizeof(char));
     scanf("%s", name);
@@ -42,6 +42,31 @@ int moveHuman(gameStatus_t *game, human_t *player) {
     return 0;
   }
 }
+
+// Sets human direction iff it is valid (not going back on itself)
+void setHumanDirection(human_t *player, dir_t *newDir) {
+  if (player->directionChanged) {
+    dir_t *current = player->dir;
+    uint8_t currentDX = current->dX;
+    uint8_t currentDY = current->dY;
+
+    if (!currentDX) {
+      // Player is facing vertically
+      if (currentDY != -1 * (newDir->dY)) {
+        player->dir = newDir;
+        player->directionChanged = 0;
+      }
+    } else if (!currentDY) {
+      // Player is facing horizontally
+      if (currentDX != -1 * (newDir->dX)) {
+        player->dir = newDir;
+        player->directionChanged = 0;
+      }
+    }
+  }
+  return;
+}
+
 
 // Free the memory used by the humans
 void freeHumans(human_t **allHumans, uint8_t numHumans) {

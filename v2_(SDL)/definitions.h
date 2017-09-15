@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+
 // Constant Values
 
 
@@ -24,8 +28,8 @@ typedef point_t*** board_t;
 
 // Direction enumeration
 typedef struct direction {
-  int dX; // positive is right
-  int dY; // positive is down
+  uint8_t dX; // positive is right
+  uint8_t dY; // positive is down
 } dir_t;
 
 // Player Struct
@@ -57,11 +61,17 @@ typedef struct allPlayers {
   robot_t **robots;
 } allPlayers_t;
 
+typedef struct graphics {
+  SDL_Window *window;
+  SDL_Renderer *renderer;
+} graphics_t;
+
 // GameStatus Struct
 typedef struct gameStatus {
   board_t board;
   allPlayers_t *players;
   int playersAlive;
+  graphics_t *graphics;
 } gameStatus_t;
 
 #endif

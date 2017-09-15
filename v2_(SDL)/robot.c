@@ -5,10 +5,10 @@
 // Initialise the robot players and return a pointer to a list containing them
 robot_t **initRobots(int numRobots, int numHumans, int randomness) {
   robot_t **all = calloc(numRobots, sizeof(robot_t*));
-  checkAllocFail(all, "robot.c.initRobots, all");
+  checkPtrNull(all, "robot.c.initRobots, all");
   for (int i = 0; i < numRobots; i++) {
     robot_t *robot = calloc(1, sizeof(robot_t));
-    checkAllocFail(robot, "robot.c.initRobots, robot");
+    checkPtrNull(robot, "robot.c.initRobots, robot");
     robot->playerNo = numHumans + i + 1;
     robot->alive = 1;
     robot->randomness = randomness;

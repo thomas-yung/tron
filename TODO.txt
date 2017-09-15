@@ -1,8 +1,10 @@
-Write game mechanics (movement, deaths, etc)
-Test
+Main loop:
+  Simulate one movement forwards
+  set render colour and clear window
+  draw rects
+  update
+TEST
 
-Research SDL
-Implement main.gameLoop()
 Polish graphics
 Test
 
