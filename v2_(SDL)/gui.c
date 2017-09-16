@@ -133,6 +133,44 @@ void dirFromDirection(dir_t *newDir, int direction) {
   }
 }
 
+// Display the current board status
+void drawBoard(gameStatus_t *gameStatus, int boardDim) {
+  SDL_Renderer *renderer = gameStatus->graphics->renderer;
+
+
+  int windowWidth;
+  int windowHeight;
+  SDL_GetWindowSize(gameStatus->graphics->window, &windowWidth, &windowHeight);
+
+  int numPlayers = gameStatus->players->numHumans + gameStatus->players->numRobots;
+
+  int cellWidth = windowWidth / boardDim;
+  int cellHeight = windowHeight / boardDim;
+
+  //Clear screen to black
+  SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_RenderClear(renderer);
+
+  //Render cells of grid
+  for (int col = 0; col < boardDim; col++) {
+    for (int row = 0; row < boardDim; row++) {
+      int cellOccupant = getOccupant(gameStatus->board, col, row);
+      if (cellOccupant) {
+        SDL_Rect cell = {col + col * cellWidth,
+                         row + row * cellHeight,
+                         cellWidth,
+                         cellHeight};
+
+        uint8_t *rgb = playerNumToRGB(numPlayers, cellOccupant);
+        SDL_SetRenderDrawColor(renderer, rgb[0], rgb[1], rgb[2], 0xFF);
+        SDL_RenderFillRect(renderer, &cell);
+        free(rgb);
+      }
+    }
+  }
+
+return;
+}
 
 // Free memory used by graphics
 void freeGraphics(graphics_t *graphics) {

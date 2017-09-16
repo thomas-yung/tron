@@ -23,8 +23,8 @@ int holeFreq;
 int boardDim;
 int randomness;
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 1000;
 
 gameStatus_t *gameStatus;
 
@@ -86,7 +86,7 @@ void initialise() {
   gameStatus = calloc(1, sizeof(gameStatus_t));
   checkPtrNull(gameStatus, "main.initialise, gameStatus");
 
-  human_t **allHuman = initHumans(numHumans);
+  human_t **allHuman = initHumans(numHumans, numHumans + numRobots);
 
   robot_t **allBots = initRobots(numRobots, numHumans, randomness);
 
@@ -103,10 +103,12 @@ void initialise() {
 
   gameStatus->playersAlive = numHumans + numRobots;
 
+  putPlayersOnBoard(gameStatus, boardDim);
+
   gameStatus->graphics = initGraphicsStruct();
 
   // Place players on board and assign colours
-  
+
   return;
 }
 
@@ -120,13 +122,15 @@ void gameLoop() {
     exit(EXIT_FAILURE);
   }
 
+  // Draw initial board
+  drawBoard(gameStatus, boardDim);
+
   // Initialise event holder
   SDL_Event e;
 
   int quit = 0;
   // main loop
   while (gameStatus->playersAlive > 1 && !quit) {
-
     while (SDL_PollEvent(&e)) {
       quit = handleEvent(gameStatus, &e);
     }
@@ -139,15 +143,17 @@ void gameLoop() {
       }
     }
     for (int i = 0; i < numRobots; i++) {
-      robot_t *oneRobot = (gameStatus->players->robots)[numHumans + i];
+      printf("Here\n" );
+      robot_t *oneRobot = (gameStatus->players->robots)[i];
       if (oneRobot->alive) {
         moveRobot(gameStatus, oneRobot, aiSchema);
       }
     }
 
-    // set render colour and clear window
-    // draw rects
-    // update
+    // Display the current board
+    drawBoard(gameStatus, boardDim);
+    SDL_Delay(1000);
+    printf("Alive: %d\n", gameStatus->playersAlive);
 
   }
 }

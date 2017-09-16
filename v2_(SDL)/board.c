@@ -22,6 +22,38 @@ board_t initBoard(int boardDim) {
   return board;
 }
 
+void putPlayersOnBoard(gameStatus_t *gameStatus, int boardDim) {
+  int numPlayers = gameStatus->playersAlive;
+  board_t board = gameStatus->board;
+  allPlayers_t *all =  gameStatus->players;
+
+  int numHumans = all->numHumans;
+
+  int r = 3/4 * boardDim;
+
+  // Add humans
+  for (int i = 0; i < numHumans; i++) {
+    int xPos = boardDim/2 - r * cos(i * 2 * PI / numPlayers);
+    int yPos = boardDim/2 - r * sin(i * 2 * PI / numPlayers);
+    (all->humans)[i]->head = getPoint(board, xPos, yPos);
+    // First player in array (index=0) has a player number of 1
+    setOccupant(board, xPos, yPos, i + 1);
+  }
+
+  // Add robots
+  for (int i = numHumans; i < numPlayers; i++) {
+    // NOTE: if last human is player number 2, numHumans = 2 so first robot is 3
+    int playerNo = i + 1;
+    int xPos = boardDim/2 - r * cos(playerNo * 2 * PI / numPlayers);
+    int yPos = boardDim/2 + r * sin(playerNo * 2 * PI / numPlayers);
+    (all->robots)[i - numHumans]->head = getPoint(board, xPos, yPos);
+    setOccupant(board, xPos, yPos, playerNo);
+  }
+
+  return;
+}
+
+
 // Return the occupant number of a cell
 int getOccupant(board_t board, int col, int row) {
   return (board[col][row])->occupant;

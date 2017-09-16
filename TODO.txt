@@ -1,11 +1,5 @@
-Initialise:
-  set position and colors
-
-Main loop:
-  set render colour and clear window
-  draw rects
-  update
-TEST
+Debug
+  Check from players occupying the board to displaying this
 
 Polish graphics
 Test

@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -c -g -O0 -Wall -Werror -pedantic -std=c99
 
 # Define linking flags (-lSDL2 is for the graphics library, SDL)
-LFLAGS = -lSDL2 -lSDL2_image
+LFLAGS = -lSDL2 -lSDL2_image -lm
 
 all: tron
 

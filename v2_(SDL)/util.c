@@ -57,3 +57,64 @@ void decrementPlayersAlive(gameStatus_t *game) {
   game->playersAlive--;
   return;
 }
+
+// Give an array of the RGB values for a given player
+uint8_t *playerNumToRGB(int numPlayers, int playerNo) {
+  uint8_t *rgb = calloc(3, sizeof(uint8_t));
+  checkPtrNull(rgb, "util.c.playerNumToRGB, rgb");
+
+  int maxColor = 0xFF;
+  float para = maxColor / (numPlayers / 4.0f);
+
+
+  // Red value
+  if (playerNo > numPlayers / 4.0f && playerNo < numPlayers / 2.0f) {
+    rgb[0] = maxColor - (playerNo - numPlayers / 4.0f) * para;
+  } else if (playerNo < numPlayers / 4.0f) {
+    rgb[0] = maxColor;
+  } else {
+    rgb[0] = 0;
+  }
+
+  // Green value
+  if (playerNo >= 0 && playerNo < numPlayers / 4.0f) {
+    rgb[1] = playerNo * para;
+  } else if (playerNo > 3 * numPlayers/4) {
+    rgb[1] = maxColor - (playerNo -  (3.0f * numPlayers/4.0f)) * para;
+  } else {
+    rgb[1] = maxColor;
+  }
+
+  // Blue value
+  if ((playerNo > numPlayers / 2.0f) && (playerNo < 3.0f * numPlayers / 4.0f)) {
+    rgb[2] = (playerNo - numPlayers / 2.0f) * para;
+  } else if (playerNo <= numPlayers / 2.0f) {
+    rgb[2] = 0;
+  } else {
+    rgb[2] = maxColor;
+  }
+
+  return rgb;
+}
+
+// Returns a dir_t for the starting direction of a player
+dir_t *getStartDir(int playerNo, int numPlayers) {
+  float one8th = numPlayers / 8.0f;
+  dir_t *dir = calloc(1, sizeof(dir_t));
+  int adjPN = playerNo - 1;
+
+  if (adjPN >= one8th * 7 || adjPN < one8th) {
+    dir->dX = 0;
+    dir->dY = 1;
+  } else if (adjPN >= one8th && adjPN < one8th * 3) {
+    dir->dX = -1;
+    dir->dY = 0;
+  } else if (adjPN >= one8th * 3 && adjPN < one8th * 5) {
+    dir->dX = 0;
+    dir->dY = -1;
+  } else {
+    dir->dX = 1;
+    dir->dY = 0;
+  }
+  return dir;
+}

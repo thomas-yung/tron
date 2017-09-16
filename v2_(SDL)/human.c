@@ -4,7 +4,7 @@
 // Method Descriptions
 // Initialise up to two human players of the game and combine them into a list
 // which is returned to the caller.
-human_t **initHumans(int numHumans) {
+human_t **initHumans(int numHumans, int numPlayers) {
   human_t **all = calloc(numHumans, sizeof(human_t*));
   checkPtrNull(all, "main.initHumans, all");
   for (int i = 0; i < numHumans; i++) {
@@ -15,6 +15,8 @@ human_t **initHumans(int numHumans) {
     scanf("%s", name);
     player->name = name;
     player->playerNo = i + 1;
+    dir_t *stDir = getStartDir(i + 1,  numPlayers);
+    player->dir = stDir;
     player->alive = 1;
     all[i] = player;
   }

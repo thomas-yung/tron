@@ -6,13 +6,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 
 // Constant Values
-
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
 
 // Point Struct
 typedef struct point {
@@ -28,8 +31,8 @@ typedef point_t*** board_t;
 
 // Direction enumeration
 typedef struct direction {
-  uint8_t dX; // positive is right
-  uint8_t dY; // positive is down
+  int8_t dX; // positive is right
+  int8_t dY; // positive is down
 } dir_t;
 
 // Player Struct

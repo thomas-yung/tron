@@ -4,12 +4,14 @@
 // Method Descriptions
 // Initialise the robot players and return a pointer to a list containing them
 robot_t **initRobots(int numRobots, int numHumans, int randomness) {
+  int numPlayers = numRobots + numHumans;
   robot_t **all = calloc(numRobots, sizeof(robot_t*));
   checkPtrNull(all, "robot.c.initRobots, all");
   for (int i = 0; i < numRobots; i++) {
     robot_t *robot = calloc(1, sizeof(robot_t));
     checkPtrNull(robot, "robot.c.initRobots, robot");
     robot->playerNo = numHumans + i + 1;
+    robot->dir = getStartDir(numHumans + i + 1,  numPlayers);
     robot->alive = 1;
     robot->randomness = randomness;
     all[i] = robot;
