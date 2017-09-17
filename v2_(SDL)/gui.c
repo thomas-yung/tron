@@ -72,16 +72,16 @@ int handleEvent(gameStatus_t *gameStatus, SDL_Event *e) {
           tryMoveHuman(gameStatus, 1, RIGHT);
           return 0;
         case SDLK_UP:
-          tryMoveHuman(gameStatus, 1, UP);
+          tryMoveHuman(gameStatus, 2, UP);
           return 0;
         case SDLK_DOWN:
-          tryMoveHuman(gameStatus, 1, DOWN);
+          tryMoveHuman(gameStatus, 2, DOWN);
           return 0;
         case SDLK_LEFT:
-          tryMoveHuman(gameStatus, 1, LEFT);
+          tryMoveHuman(gameStatus, 2, LEFT);
           return 0;
         case SDLK_RIGHT:
-          tryMoveHuman(gameStatus, 1, RIGHT);
+          tryMoveHuman(gameStatus, 2, RIGHT);
           return 0;
       }
     }
@@ -92,20 +92,13 @@ int handleEvent(gameStatus_t *gameStatus, SDL_Event *e) {
 // Attempt to move a specified human, doing nothing if the specified one does
 // not exist
 void tryMoveHuman(gameStatus_t *gameStatus, int playerNo, int direction) {
-  printf("%d\n", direction);
   int numHumans = gameStatus->players->numHumans;
   if (numHumans <= 0) {
     return;
-  } else if (numHumans == 1) {
-    if (playerNo == 1) {
-      dir_t *newDir = calloc(1, sizeof(dir_t));
-      checkPtrNull(newDir, "gui.c.tryMoveHuman, newDir");
-      dirFromDirection(newDir, direction);
-      setHumanDirection((gameStatus->players->humans)[0], newDir);
-    }
-  } else if (numHumans == 2) {
+  } else {
     dir_t *newDir = calloc(1, sizeof(dir_t));
     checkPtrNull(newDir, "gui.c.tryMoveHuman, newDir");
+    dirFromDirection(newDir, direction);
     setHumanDirection((gameStatus->players->humans)[playerNo - 1], newDir);
   }
   return;
@@ -148,7 +141,7 @@ void drawBoard(gameStatus_t *gameStatus, int boardDim) {
   int cellHeight = windowHeight / boardDim;
 
   //Clear screen to black
-  SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
   SDL_RenderClear(renderer);
 
   //Render cells of grid
@@ -156,8 +149,8 @@ void drawBoard(gameStatus_t *gameStatus, int boardDim) {
     for (int row = 0; row < boardDim; row++) {
       int cellOccupant = getOccupant(gameStatus->board, col, row);
       if (cellOccupant) {
-        SDL_Rect cell = {col + col * cellWidth,
-                         row + row * cellHeight,
+        SDL_Rect cell = {col * cellWidth,
+                         row * cellHeight,
                          cellWidth,
                          cellHeight};
 
@@ -166,8 +159,19 @@ void drawBoard(gameStatus_t *gameStatus, int boardDim) {
         SDL_RenderFillRect(renderer, &cell);
         free(rgb);
       }
+      // if ((col + row) % 2) {
+      //     SDL_Rect cell = {col * cellWidth,
+      //                      row * cellHeight,
+      //                      cellWidth,
+      //                      cellHeight};
+      //     printf("x=%d y=%d w=%d h=%d \n", cell.x, cell.y, cell.w, cell.h);
+      //     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+      //     SDL_RenderFillRect(renderer, &cell);
+      // }
     }
   }
+  // Update screem
+  SDL_RenderPresent(renderer);
 
 return;
 }

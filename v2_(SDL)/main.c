@@ -45,8 +45,8 @@ int main(int argc, char **argv) {
   } else {
     // pollUserForParameters();
     printf("Let's pretend the parameters are in...\n");
-    numHumans = 2;
-    numRobots = 8;
+    numHumans = 0;
+    numRobots = 5;
     aiSchema = 1;
     FPS = 16;
     holeFreq = 10;
@@ -107,8 +107,6 @@ void initialise() {
 
   gameStatus->graphics = initGraphicsStruct();
 
-  // Place players on board and assign colours
-
   return;
 }
 
@@ -125,6 +123,25 @@ void gameLoop() {
   // Draw initial board
   drawBoard(gameStatus, boardDim);
 
+  // // Query a cell
+  // int cont = 1;
+  // while (cont) {
+  //   printf("Give x then y (boardDim=%d)\n", boardDim);
+  //   int x;
+  //   int y;
+  //   scanf("%d", &x);
+  //   scanf("%d", &y);
+  //   if (x == -1 && y == -1) {
+  //     cont = 0;
+  //   } else {
+  //     int o = ((gameStatus->board)[x][y])->occupant;
+  //     printf("x: %d, y: %d, occupant: %d\n", ((gameStatus->board)[x][y])->x,((gameStatus->board)[x][y])->y, o);
+  //     uint8_t *c = playerNumToRGB(gameStatus->playersAlive,o);
+  //     printf("Color: r = %d, g = %d, b = %d\n", c[0],c[1],c[2]);
+  //     free(c);
+  //   }
+  // }
+
   // Initialise event holder
   SDL_Event e;
 
@@ -139,35 +156,36 @@ void gameLoop() {
     for (int i = 0; i < numHumans; i++) {
       human_t *oneHuman = (gameStatus->players->humans)[i];
       if (oneHuman->alive) {
-        moveHuman(gameStatus, oneHuman);
+        moveHuman(gameStatus, oneHuman, boardDim);
+        printf("\n");
       }
     }
+
     for (int i = 0; i < numRobots; i++) {
-      printf("Here\n" );
       robot_t *oneRobot = (gameStatus->players->robots)[i];
       if (oneRobot->alive) {
-        moveRobot(gameStatus, oneRobot, aiSchema);
+        moveRobot(gameStatus, oneRobot, aiSchema, boardDim);
       }
     }
 
     // Display the current board
     drawBoard(gameStatus, boardDim);
-    SDL_Delay(1000);
-    printf("Alive: %d\n", gameStatus->playersAlive);
-
+    SDL_Delay(50);
   }
+
+  int alive = gameStatus->playersAlive;
+
+  if (alive == 1) {
+    int winner = findWinner(gameStatus);
+    printf("Player %d won\n", winner);
+  } else if (alive == 0) {
+    printf("Tie\n");
+  }
+
 }
 
 
 
-  // while (1) {
-  //   printf("Give x then y (boardDim=%d)\n", boardDim);
-  //   int x;
-  //   int y;
-  //   scanf("%d", &x);
-  //   scanf("%d", &y);
-  //   printf("x: %d, y: %d, occupant: %d\n", ((gameStatus->board)[x][y])->x,((gameStatus->board)[x][y])->y,((gameStatus->board)[x][y])->occupant);
-  // }
 
 
 

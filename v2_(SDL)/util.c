@@ -118,3 +118,43 @@ dir_t *getStartDir(int playerNo, int numPlayers) {
   }
   return dir;
 }
+
+// Returns the starting position for a player given their player number
+int *getStartPos(int playerNo, int numPlayers, int boardDim) {
+  float adjNo = playerNo - 1;
+  float r = 0.375 * boardDim;
+
+  int *pair = calloc(2, sizeof(int));
+  pair[0] = boardDim/2.0f - r * cos(2.0f * PI * (adjNo / (float) numPlayers));
+  pair[1] = boardDim/2.0f - r * sin(2.0f * PI * (adjNo / (float) numPlayers));
+
+  return pair;
+}
+
+// Returns 0 iff the column and row are wihin the sides of the board and
+// 1 if the point is put of bounds
+int outOfBounds(int col, int row, int boardDim) {
+  return (col < 0 || row < 0 || col >= boardDim || row >= boardDim);
+}
+
+// Finds the only alive player
+int findWinner(gameStatus_t *gameStatus) {
+  int numHumans = gameStatus->players->numHumans;
+  int numRobots = gameStatus->players->numRobots;
+
+  for (int i = 0; i < numHumans; i++) {
+    human_t *oneHuman = (gameStatus->players->humans)[i];
+    if (oneHuman->alive) {
+      return i;
+    }
+  }
+
+  for (int i = 0; i < numRobots; i++) {
+    robot_t *oneRobot = (gameStatus->players->robots)[i];
+    if (oneRobot->alive) {
+      return numHumans + i + 1;
+    }
+  }
+  printf("Couldn't find winner\n");
+  return -1;
+}

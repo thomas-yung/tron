@@ -1,5 +1,8 @@
-Debug
-  Check from players occupying the board to displaying this
+Add an AI :):)
+
+Add some common variables to gameStatus (like boardDim)
+
+End screen
 
 Polish graphics
 Test
