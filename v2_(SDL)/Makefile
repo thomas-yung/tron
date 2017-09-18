@@ -9,7 +9,7 @@ LFLAGS = -lSDL2 -lSDL2_image -lm
 
 all: tron
 
-tron: main.o util.o human.o robot.o board.o gui.o aiSchemas.o
+tron: main.o util.o player.o board.o gui.o aiSchemas.o
 	$(CC) $^ $(LFLAGS) -o $@
 
 main.o: main.c definitions.h util.o
@@ -18,11 +18,8 @@ main.o: main.c definitions.h util.o
 util.o: util.c util.h definitions.h
 	$(CC) $(CFLAGS) util.c
 
-human.o: human.c human.h definitions.h util.o
-	$(CC) $(CFLAGS) human.c
-
-robot.o: robot.c robot.h definitions.h util.o aiSchemas.o
-	$(CC) $(CFLAGS) robot.c
+player.o: player.c player.h definitions.h util.o
+	$(CC) $(CFLAGS) player.c
 
 board.o: board.c board.h definitions.h util.o
 	$(CC) $(CFLAGS) board.c

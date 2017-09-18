@@ -2,31 +2,10 @@
 #include "human.h"
 
 // Method Descriptions
-// Initialise up to two human players of the game and combine them into a list
-// which is returned to the caller.
-human_t **initHumans(int numHumans, int numPlayers) {
-  human_t **all = calloc(numHumans, sizeof(human_t*));
-  checkPtrNull(all, "main.initHumans, all");
-  for (int i = 0; i < numHumans; i++) {
-    human_t *player = calloc(1, sizeof(human_t));
-    checkPtrNull(player, "main.initHumans, player");
-    printf("Player %d: enter your name...\n", (i + 1));
-    char *name = calloc(20, sizeof(char));
-    scanf("%s", name);
-    player->name = name;
-    player->playerNo = i + 1;
-    dir_t *stDir = getStartDir(i + 1,  numPlayers);
-    player->dir = stDir;
-    player->alive = 1;
-    all[i] = player;
-  }
-  return all;
-}
-
 // Move the human by one space in the direction it is facing
 // The value returned indicates if the player survives this move
 // 0 for death, non-zero for survival
-int moveHuman(gameStatus_t *game, human_t *player, int boardDim) {
+int moveHuman(gSt_t *game, human_t *player) {
   point_t *head = player->head;
   dir_t *dir = player->dir;
   board_t board = game->board;
@@ -36,7 +15,7 @@ int moveHuman(gameStatus_t *game, human_t *player, int boardDim) {
   int newRow = head->y + dir->dY;
 
   // printf("newRow = %d, newCol = %d\n", newRow, newCol);
-  if (outOfBounds(newCol, newRow, boardDim)) {
+  if (outOfBounds(newCol, newRow, game->boardDim)) {
     player->alive = 0;
     decrementPlayersAlive(game);
     return 0;

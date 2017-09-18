@@ -6,13 +6,13 @@
 
 // Method Declarations
 void checkPtrNull(void *ptr, char *fromMethod);
-void checkOtherPlayersAlive(gameStatus_t *game, point_t *head, int deadPlayer);
-void decrementPlayersAlive(gameStatus_t *game);
+void checkOtherPlayersAlive(gSt_t *game, point_t *head, int deadPlayer);
+void decrementPlayersAlive(gSt_t *game);
 uint8_t *playerNumToRGB(int numPlayers, int playerNo);
 dir_t *getStartDir(int playerNo, int numPlayers);
 int *getStartPos(int playerNo, int numPlayers, int boardDim);
 int outOfBounds(int col, int row, int boardDim);
-int findWinner(gameStatus_t *gameStatus);
+player_t *findWinner(gSt_t *gameStatus);
 int isValidDir(dir_t *current, dir_t *newDir);
 
 

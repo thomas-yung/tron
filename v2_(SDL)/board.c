@@ -22,34 +22,23 @@ board_t initBoard(int boardDim) {
 
     board[colNum] = column;
   }
-  
+
   return board;
 }
 
-void putPlayersOnBoard(gameStatus_t *gameStatus, int boardDim) {
-  int numPlayers = gameStatus->playersAlive;
+void putPlayersOnBoard(gSt_t *gameStatus) {
+  int boardDim = gameStatus->boardDim;
   board_t board = gameStatus->board;
-  allPlayers_t *all =  gameStatus->players;
+  allPlayers_t *allPlayers =  gameStatus->players;
 
-  int numHumans = all->numHumans;
+  int numPlayers = allPlayers->numPlayers;
 
-  // Add humans
-  for (int i = 0; i < numHumans; i++) {
+  for (int i = 0; i < numPlayers; i++) {
     int playerNo = i + 1;
     int *coords = getStartPos(playerNo, numPlayers, boardDim);
-    (all->humans)[i]->head = getPoint(board, coords[0], coords[1]);
+    (allPlayers->all)[i]->head = getPoint(board, coords[0], coords[1]);
     // First player in array (index=0) has a player number of 1
     setOccupant(board, coords[0], coords[1], i + 1);
-    free(coords);
-  }
-
-  // Add robots
-  for (int i = numHumans; i < numPlayers; i++) {
-    // NOTE: if last human is player number 2, numHumans = 2 so first robot is 3
-    int playerNo = i + 1;
-    int *coords = getStartPos(playerNo, numPlayers, boardDim);
-    (all->robots)[i - numHumans]->head = getPoint(board, coords[0], coords[1]);
-    setOccupant(board, coords[0], coords[1], playerNo);
     free(coords);
   }
 

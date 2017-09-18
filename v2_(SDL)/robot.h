@@ -9,8 +9,8 @@
 
 // Method Declarations
 robot_t **initRobots(int numRobots, int numHumans, int randomness);
-void chooseDirection(robot_t *player, gameStatus_t *gameStatus, int schema);
-int moveRobot(gameStatus_t *game, robot_t *player, int aiSchema, int boardDim);
+void chooseDirection(robot_t *player, gSt_t *gameStatus, int schema);
+int moveRobot(gSt_t *game, robot_t *player, int aiSchema);
 void freeRobots(robot_t **allRobots, int numRobots);
 
 #endif

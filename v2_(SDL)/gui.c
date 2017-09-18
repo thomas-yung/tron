@@ -53,7 +53,7 @@ uint8_t initGUI(graphics_t *graphics, int windowWidth, int windowHeight) {
 
 // Handle an event, updating the game if necessary
 // Returns 1 if the event is a quit
-int handleEvent(gameStatus_t *gameStatus, SDL_Event *e) {
+int handleEvent(gSt_t *gameStatus, SDL_Event *e) {
   if (e->type == SDL_QUIT) {
     return 1;
   } else {
@@ -91,7 +91,7 @@ int handleEvent(gameStatus_t *gameStatus, SDL_Event *e) {
 
 // Attempt to move a specified human, doing nothing if the specified one does
 // not exist
-void tryMoveHuman(gameStatus_t *gameStatus, int playerNo, int direction) {
+void tryMoveHuman(gSt_t *gameStatus, int playerNo, int direction) {
   int numHumans = gameStatus->players->numHumans;
   if (numHumans <= 0) {
     return;
@@ -99,7 +99,7 @@ void tryMoveHuman(gameStatus_t *gameStatus, int playerNo, int direction) {
     dir_t *newDir = calloc(1, sizeof(dir_t));
     checkPtrNull(newDir, "gui.c.tryMoveHuman, newDir");
     dirFromDirection(newDir, direction);
-    setHumanDirection((gameStatus->players->humans)[playerNo - 1], newDir);
+    setHumanDirection((gameStatus->players->all)[playerNo - 1], newDir);
   }
   return;
 }
@@ -127,15 +127,15 @@ void dirFromDirection(dir_t *newDir, int direction) {
 }
 
 // Display the current board status
-void drawBoard(gameStatus_t *gameStatus, int boardDim) {
+void drawBoard(gSt_t *gameStatus) {
   SDL_Renderer *renderer = gameStatus->graphics->renderer;
-
+  int boardDim = gameStatus->boardDim;
 
   int windowWidth;
   int windowHeight;
   SDL_GetWindowSize(gameStatus->graphics->window, &windowWidth, &windowHeight);
 
-  int numPlayers = gameStatus->players->numHumans + gameStatus->players->numRobots;
+  int numPlayers = gameStatus->players->numPlayers;
 
   int cellWidth = windowWidth / boardDim;
   int cellHeight = windowHeight / boardDim;
@@ -159,23 +159,11 @@ void drawBoard(gameStatus_t *gameStatus, int boardDim) {
   }
 
   // Paint heads white
-  int numHumans = gameStatus->players->numHumans;
-  int numRobots = gameStatus->players->numRobots;
-
-  for (int i = 0; i < numHumans; i++) {
-    human_t *oneHuman = (gameStatus->players->humans)[i];
-    if (oneHuman->alive) {
-      int x = oneHuman->head->x * cellWidth;
-      int y = oneHuman->head->y * cellHeight;
-      drawCell(renderer, x, y, cellWidth, cellHeight, 0xFF, 0xFF, 0xFF);
-    }
-  }
-
-  for (int i = 0; i < numRobots; i++) {
-    robot_t *oneRobot = (gameStatus->players->robots)[i];
-    if (oneRobot->alive) {
-      int x = oneRobot->head->x * cellWidth;
-      int y = oneRobot->head->y * cellHeight;
+  for (int i = 0; i < numPlayers; i++) {
+    player_t *onePlayer = (gameStatus->players->all)[i];
+    if (onePlayer->alive) {
+      int x = onePlayer->head->x * cellWidth;
+      int y = onePlayer->head->y * cellHeight;
       drawCell(renderer, x, y, cellWidth, cellHeight, 0xFF, 0xFF, 0xFF);
     }
   }

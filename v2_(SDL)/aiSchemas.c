@@ -5,7 +5,7 @@
 // A simple AI that picks a random move out of the valid ones available to it
 // If there are no valid moves then the direction is not changed
 // This AI is barely intelligent
-void pickRandomValidDir(robot_t *player) {
+void pickRandomValidDir(player_t *player, int randomness) {
   uint8_t numPossibleTurns = 0;
   dir_t **possibleTurns = calloc(3, sizeof(dir_t*));
   checkPtrNull(possibleTurns, "aiSchemas.c.pickRandomValidDir, possibleTurns");
@@ -43,7 +43,7 @@ void pickRandomValidDir(robot_t *player) {
   if (numPossibleTurns) {
     // There is at least one so randomly pick and set
     int chance = rand() % 101;
-    if (chance < player->randomness) {
+    if (chance < randomness) {
       int option = rand() % numPossibleTurns;
       player->dir = possibleTurns[option];
 
@@ -66,6 +66,6 @@ void pickRandomValidDir(robot_t *player) {
 // what direction is best
 // Parameters for this *may* include the number of moves ahead looked and the
 // number of turns it executes in checking combinations
-void maximiseSpaceAhead(robot_t *player, gameStatus_t *gameStatus) {
+void maximiseSpaceAhead(player_t *player, gSt_t *gameStatus, int randomness) {
 
 }

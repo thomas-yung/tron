@@ -16,34 +16,17 @@ void checkPtrNull(void *ptr, char *fromMethod) {
 // Eliminate other player if this is the case
 // Players with a higher number have not moves yet thus do not need to be
 // checked
-void checkOtherPlayersAlive(gameStatus_t *game, point_t *head, int deadPlayer) {
-  allPlayers_t *all = game->players;
+void checkOtherPlayersAlive(gSt_t *game, point_t *head, int deadPlayer) {
+  player_t **allPlayers = game->players->all;
+  int numPlayers = game->players->numPlayers;
 
-  // Check human players
-  human_t **allHumans = all->humans;
-  int numHumans = all->numHumans;
-  for (int i = 0; i < numHumans; i++) {
-    human_t *oneHuman = allHumans[i];
-    if (oneHuman->playerNo >= deadPlayer) {
+  for (int i = 0; i < numPlayers; i++) {
+    player_t *onePlayer = allPlayers[i];
+    if (onePlayer->playerNo >= deadPlayer) {
       return;
     } else {
-      if (head == oneHuman->head) {
-        oneHuman->alive = 0;
-        decrementPlayersAlive(game);
-      }
-    }
-  }
-
-  // Check robot players
-  robot_t **allRobots = all->robots;
-  int numRobots = all->numRobots;
-  for (int i = 0; i < numRobots; i++) {
-    robot_t *oneRobot = allRobots[i];
-    if (oneRobot->playerNo >= deadPlayer) {
-      return;
-    } else {
-      if (head == oneRobot->head) {
-        oneRobot->alive = 0;
+      if (head == onePlayer->head) {
+        onePlayer->alive = 0;
         decrementPlayersAlive(game);
       }
     }
@@ -53,7 +36,7 @@ void checkOtherPlayersAlive(gameStatus_t *game, point_t *head, int deadPlayer) {
 }
 
 // Decrement the number of players alive
-void decrementPlayersAlive(gameStatus_t *game) {
+void decrementPlayersAlive(gSt_t *game) {
   game->playersAlive--;
   return;
 }
@@ -138,25 +121,18 @@ int outOfBounds(int col, int row, int boardDim) {
 }
 
 // Finds the only alive player
-int findWinner(gameStatus_t *gameStatus) {
-  int numHumans = gameStatus->players->numHumans;
-  int numRobots = gameStatus->players->numRobots;
+player_t *findWinner(gSt_t *gameStatus) {
+  int numPlayers = gameStatus->players->numPlayers;
 
-  for (int i = 0; i < numHumans; i++) {
-    human_t *oneHuman = (gameStatus->players->humans)[i];
-    if (oneHuman->alive) {
-      return i;
+  for (int i = 0; i < numPlayers; i++) {
+    player_t *onePlayer = (gameStatus->players->all)[i];
+    if (onePlayer->alive) {
+      return onePlayer;
     }
   }
 
-  for (int i = 0; i < numRobots; i++) {
-    robot_t *oneRobot = (gameStatus->players->robots)[i];
-    if (oneRobot->alive) {
-      return numHumans + i + 1;
-    }
-  }
   printf("Couldn't find winner\n");
-  return -1;
+  return NULL;
 }
 
 // A method stating if a direction change is valid

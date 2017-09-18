@@ -20,7 +20,7 @@ robot_t **initRobots(int numRobots, int numHumans, int randomness) {
 }
 
 // Autonomously decide and set the new direction
-void chooseDirection(robot_t *player, gameStatus_t *gameStatus, int schema) {
+void chooseDirection(robot_t *player, gSt_t *gameStatus, int schema) {
   switch (schema) {
     case 0:
       pickRandomValidDir(player);
@@ -38,7 +38,7 @@ void chooseDirection(robot_t *player, gameStatus_t *gameStatus, int schema) {
 // Move the robot by one space in the direction it is facing
 // The value returned indicates if the player survives this move
 // 0 for death, non-zero for survival
-int moveRobot(gameStatus_t *game, robot_t *player, int aiSchema, int boardDim) {
+int moveRobot(gSt_t *game, robot_t *player, int aiSchema) {
   chooseDirection(player, game, aiSchema);
   point_t *head = player->head;
   dir_t *dir = player->dir;
@@ -48,7 +48,7 @@ int moveRobot(gameStatus_t *game, robot_t *player, int aiSchema, int boardDim) {
   int newCol = head->x + dir->dX;
   int newRow = head->y + dir->dY;
 
-  if (outOfBounds(newCol, newRow, boardDim)) {
+  if (outOfBounds(newCol, newRow, game->boardDim)) {
     player->alive = 0;
     decrementPlayersAlive(game);
     return 0;

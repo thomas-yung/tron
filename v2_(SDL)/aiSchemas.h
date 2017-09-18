@@ -6,7 +6,7 @@
 #include "util.h"
 
 // Method Declarations
-void pickRandomValidDir(robot_t *player);
-void maximiseSpaceAhead(robot_t *player, gameStatus_t *gameStatus);
+void pickRandomValidDir(player_t *player, int randomness);
+void maximiseSpaceAhead(player_t *player, gSt_t *gameStatus, int randomness);
 
 #endif

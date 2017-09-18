@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -37,32 +38,25 @@ typedef struct direction {
 } dir_t;
 
 // Player Struct
-typedef struct human {
+// NOTE: aiSchema is 0 if the player is human controlled and the schema number
+//       otherwise
+typedef struct player {
   char *name;
   int playerNo;
   point_t *head;
   dir_t *dir;
   uint8_t directionChanged;
   uint8_t alive;
-  uint8_t schema;
-} human_t;
-
-// Robot Struct
-typedef struct robot {
-  int playerNo;
-  point_t *head;
-  dir_t *dir;
-  uint8_t directionChanged;
-  uint8_t alive;
-  int randomness;
-} robot_t;
+  uint8_t aiSchema;
+} player_t;
 
 // AllPlayers Struct
 typedef struct allPlayers {
+  player_t **all;
   int numHumans;
-  human_t **humans;
   int numRobots;
-  robot_t **robots;
+  int numPlayers;
+  int randomness;
 } allPlayers_t;
 
 typedef struct graphics {
@@ -73,9 +67,10 @@ typedef struct graphics {
 // GameStatus Struct
 typedef struct gameStatus {
   board_t board;
+  int boardDim;
   allPlayers_t *players;
   int playersAlive;
   graphics_t *graphics;
-} gameStatus_t;
+} gSt_t;
 
 #endif

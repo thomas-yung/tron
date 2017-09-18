@@ -8,7 +8,7 @@
 
 // Method Declarations
 human_t **initHumans(int numHumans, int numPlayers);
-int moveHuman(gameStatus_t *game, human_t *player, int boardDim);
+int moveHuman(gSt_t *game, human_t *player);
 void freeHumans(human_t **allHumans, uint8_t numHumans);
 void setHumanDirection(human_t *player, dir_t *newDir);
 
