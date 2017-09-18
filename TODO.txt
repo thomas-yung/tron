@@ -2,6 +2,9 @@ Add an AI :):)
 
 Add some common variables to gameStatus (like boardDim)
 
+Combine human_t and robot_t
+isRobot field has 0 for human and schema number for robot
+
 End screen
 
 Polish graphics

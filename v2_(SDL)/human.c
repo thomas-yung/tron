@@ -61,29 +61,15 @@ void setHumanDirection(human_t *player, dir_t *newDir) {
 
   if (!(player->directionChanged)) {
     dir_t *current = player->dir;
-    int8_t currentDX = current->dX;
-    int8_t currentDY = current->dY;
 
-    if (!currentDX) {
-      // Player is facing vertically
-      if (currentDY != -1 * (newDir->dY)) {
-        player->dir = newDir;
-        player->directionChanged = 1;
-
-        free(current);
-      }
-    } else if (!currentDY) {
-      // Player is facing horizontally
-      if (currentDX != -1 * (newDir->dX)) {
-        player->dir = newDir;
-        player->directionChanged = 1;
-        free(current);
-      }
+    if (isValidDir(current, newDir)) {
+      player->dir = newDir;
+      player->directionChanged = 1;
+      free(current);
     }
   }
   return;
 }
-
 
 // Free the memory used by the humans
 void freeHumans(human_t **allHumans, uint8_t numHumans) {

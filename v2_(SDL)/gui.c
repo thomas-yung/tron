@@ -149,32 +149,51 @@ void drawBoard(gameStatus_t *gameStatus, int boardDim) {
     for (int row = 0; row < boardDim; row++) {
       int cellOccupant = getOccupant(gameStatus->board, col, row);
       if (cellOccupant) {
-        SDL_Rect cell = {col * cellWidth,
-                         row * cellHeight,
-                         cellWidth,
-                         cellHeight};
-
+        int x = col * cellWidth;
+        int y = row * cellHeight;
         uint8_t *rgb = playerNumToRGB(numPlayers, cellOccupant);
-        SDL_SetRenderDrawColor(renderer, rgb[0], rgb[1], rgb[2], 0xFF);
-        SDL_RenderFillRect(renderer, &cell);
+        drawCell(renderer, x, y, cellWidth, cellHeight, rgb[0], rgb[1], rgb[2]);
         free(rgb);
       }
-      // if ((col + row) % 2) {
-      //     SDL_Rect cell = {col * cellWidth,
-      //                      row * cellHeight,
-      //                      cellWidth,
-      //                      cellHeight};
-      //     printf("x=%d y=%d w=%d h=%d \n", cell.x, cell.y, cell.w, cell.h);
-      //     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-      //     SDL_RenderFillRect(renderer, &cell);
-      // }
     }
   }
-  // Update screem
+
+  // Paint heads white
+  int numHumans = gameStatus->players->numHumans;
+  int numRobots = gameStatus->players->numRobots;
+
+  for (int i = 0; i < numHumans; i++) {
+    human_t *oneHuman = (gameStatus->players->humans)[i];
+    if (oneHuman->alive) {
+      int x = oneHuman->head->x * cellWidth;
+      int y = oneHuman->head->y * cellHeight;
+      drawCell(renderer, x, y, cellWidth, cellHeight, 0xFF, 0xFF, 0xFF);
+    }
+  }
+
+  for (int i = 0; i < numRobots; i++) {
+    robot_t *oneRobot = (gameStatus->players->robots)[i];
+    if (oneRobot->alive) {
+      int x = oneRobot->head->x * cellWidth;
+      int y = oneRobot->head->y * cellHeight;
+      drawCell(renderer, x, y, cellWidth, cellHeight, 0xFF, 0xFF, 0xFF);
+    }
+  }
+
+  // Update screen
   SDL_RenderPresent(renderer);
 
 return;
 }
+
+// Draw one cell of the board
+void drawCell(SDL_Renderer *renderer, int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b) {
+  SDL_Rect cell = {x, y, w, h};
+  SDL_SetRenderDrawColor(renderer, r, g, b, 0xFF);
+  SDL_RenderFillRect(renderer, &cell);
+  return;
+}
+
 
 // Free memory used by graphics
 void freeGraphics(graphics_t *graphics) {

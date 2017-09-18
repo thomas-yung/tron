@@ -13,6 +13,7 @@ dir_t *getStartDir(int playerNo, int numPlayers);
 int *getStartPos(int playerNo, int numPlayers, int boardDim);
 int outOfBounds(int col, int row, int boardDim);
 int findWinner(gameStatus_t *gameStatus);
+int isValidDir(dir_t *current, dir_t *newDir);
 
 
 #endif

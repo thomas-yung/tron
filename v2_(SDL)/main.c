@@ -46,12 +46,12 @@ int main(int argc, char **argv) {
     // pollUserForParameters();
     printf("Let's pretend the parameters are in...\n");
     numHumans = 0;
-    numRobots = 5;
-    aiSchema = 1;
+    numRobots = 100;
+    aiSchema = 0;
     FPS = 16;
     holeFreq = 10;
     boardDim = 100;
-    randomness = 90;
+    randomness = 20;
   }
 
   initialise();
@@ -76,7 +76,7 @@ void pollUserForParameters() {
   scanf("%d", &holeFreq);
   printf("Enter board height: ");
   scanf("%d", &boardDim);
-  printf("Enter randomness / 100 (Higher means more AI mistakes): ");
+  printf("Enter randomness up to 100pc (what pc of the time does the AI turn): ");
   scanf("%d", &randomness);
   return;
 }
@@ -86,8 +86,8 @@ void initialise() {
   gameStatus = calloc(1, sizeof(gameStatus_t));
   checkPtrNull(gameStatus, "main.initialise, gameStatus");
 
+  // Initialise all the players
   human_t **allHuman = initHumans(numHumans, numHumans + numRobots);
-
   robot_t **allBots = initRobots(numRobots, numHumans, randomness);
 
   allPlayers_t *allPlayers = calloc(1, sizeof(allPlayers_t));
@@ -98,6 +98,7 @@ void initialise() {
   allPlayers->robots = allBots;
   gameStatus->players = allPlayers;
 
+  // Initialise the board
   board_t gameBoard = initBoard(boardDim);
   gameStatus->board = gameBoard;
 
@@ -105,7 +106,15 @@ void initialise() {
 
   putPlayersOnBoard(gameStatus, boardDim);
 
+  // Initialise graphics
   gameStatus->graphics = initGraphicsStruct();
+  if (!initGUI(gameStatus->graphics, SCREEN_WIDTH, SCREEN_HEIGHT)) {
+    printf("Could not initialise GUI, quitting...\n");
+    exit(EXIT_FAILURE);
+  }
+
+  // Initialise random number generator
+  srand(time(NULL));
 
   return;
 }
@@ -115,10 +124,6 @@ void gameLoop() {
 
   // Initialise library, create window and renderer
   // and set texture filtering (to linear)
-  if (!initGUI(gameStatus->graphics, SCREEN_WIDTH, SCREEN_HEIGHT)) {
-    printf("Could not initialise GUI, quitting...\n");
-    exit(EXIT_FAILURE);
-  }
 
   // Draw initial board
   drawBoard(gameStatus, boardDim);
