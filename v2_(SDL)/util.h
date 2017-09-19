@@ -13,7 +13,9 @@ dir_t *getStartDir(int playerNo, int numPlayers);
 int *getStartPos(int playerNo, int numPlayers, int boardDim);
 int outOfBounds(int col, int row, int boardDim);
 player_t *findWinner(gSt_t *gameStatus);
-int isValidDir(dir_t *current, dir_t *newDir);
-
+// int isValidDir(dir_t *current, dir_t *newDir);
+int isValidDirNum(dirNum_t current, dirNum_t newDirNum);
+dir_t *dirFromDirNum(dirNum_t dirNum);
+dirNum_t dirNumFromDir(dir_t *dir);
 
 #endif

@@ -1,14 +1,6 @@
 // Dependencies
 #include "gui.h"
 
-// Direction Enum
-enum directionEnum {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT
-};
-
 // Method Descriptions
 // Initialise the struct holding pointers for gui utilities
 graphics_t *initGraphicsStruct() {
@@ -91,39 +83,18 @@ int handleEvent(gSt_t *gameStatus, SDL_Event *e) {
 
 // Attempt to move a specified human, doing nothing if the specified one does
 // not exist
-void tryMoveHuman(gSt_t *gameStatus, int playerNo, int direction) {
+void tryMoveHuman(gSt_t *gameStatus, int playerNo, dirNum_t newDirNum) {
   int numHumans = gameStatus->players->numHumans;
   if (numHumans <= 0) {
     return;
   } else {
-    dir_t *newDir = calloc(1, sizeof(dir_t));
-    checkPtrNull(newDir, "gui.c.tryMoveHuman, newDir");
-    dirFromDirection(newDir, direction);
-    setHumanDirection((gameStatus->players->all)[playerNo - 1], newDir);
+    dir_t *currentDir = ((gameStatus->players->all)[playerNo - 1])->dir;
+    if (isValidDirNum(dirNumFromDir(currentDir), newDirNum)) {
+      dir_t *newDir = dirFromDirNum(newDirNum);
+      setHumanDirection((gameStatus->players->all)[playerNo - 1], newDir);
+    }
   }
   return;
-}
-
-// Allocates the fields of the dir_t based on given direction
-void dirFromDirection(dir_t *newDir, int direction) {
-  switch (direction) {
-    case UP:
-      newDir->dX = 0;
-      newDir->dY = -1;
-      return;
-    case DOWN:
-      newDir->dX = 0;
-      newDir->dY = 1;
-      return;
-    case LEFT:
-      newDir->dX = -1;
-      newDir->dY = 0;
-      return;
-    case RIGHT:
-      newDir->dX = 1;
-      newDir->dY = 0;
-      return;
-  }
 }
 
 // Display the current board status

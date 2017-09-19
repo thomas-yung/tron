@@ -19,6 +19,14 @@
 #define PI 3.14159265358979323846
 #endif
 
+// Direction Enum
+typedef enum dirAsNum {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT
+} dirNum_t;
+
 // Point Struct
 typedef struct point {
   int x;

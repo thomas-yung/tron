@@ -1,6 +1,9 @@
 // Dependencies
 #include "player.h"
 
+// Constants
+#define movesAhead 10
+
 // Initialise players and return a list with them in
 player_t **initPlayers(int numHumans, int numRobots, int aiSchema) {
   int numPlayers = numHumans + numRobots;
@@ -49,7 +52,10 @@ void chooseDirection(player_t *player, gSt_t *game, int aiSchema, int randomness
       pickRandomValidDir(player, randomness);
       return;
     case 2:
-      maximiseSpaceAhead(player, game, randomness);
+      pickRandomSurvDir(player, randomness, game);
+      return;
+    case 3:
+      maximiseSpaceAhead(player, game, movesAhead);
       return;
     default:
       printf("AI schema not applicable, choosing pickRandomValidDir\n");
@@ -59,17 +65,13 @@ void chooseDirection(player_t *player, gSt_t *game, int aiSchema, int randomness
 }
 
 // Set the direction of the player (used for human players)
-// Sets direction iff it is valid (not going back on itself)
+// Sets direction assuming it is valid (not going back on itself)
 void setHumanDirection(player_t *player, dir_t *newDir) {
   if (!(player->directionChanged) && !(player->aiSchema)) {
     dir_t *current = player->dir;
-
-    if (isValidDir(current, newDir)) {
-      player->dir = newDir;
-      player->directionChanged = 1;
-      free(current);
-    }
-
+    player->dir = newDir;
+    player->directionChanged = 1;
+    free(current);
   }
   return;
 }

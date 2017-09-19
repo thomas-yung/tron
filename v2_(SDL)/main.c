@@ -32,6 +32,13 @@ gSt_t *gameStatus;
 // Method Descriptions
 // main executable
 int main(int argc, char **argv) {
+
+  int c;
+  int *ps = &c;
+  *ps = 10;
+
+  printf("%d\n", c);
+
   if (argc == 8) {
     // Correct number of command-line arguments given
     numHumans = atoi(argv[1]);
@@ -49,7 +56,7 @@ int main(int argc, char **argv) {
     numHumans = 0;
     numRobots = 100;
     numPlayers = numHumans + numRobots;
-    aiSchema = 1;
+    aiSchema = 2;
     FPS = 16;
     holeFreq = 10;
     boardDim = 100;
