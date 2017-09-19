@@ -15,8 +15,6 @@ player_t **initPlayers(int numHumans, int numRobots, int aiSchema) {
     player_t *player = calloc(1, sizeof(player_t));
     checkPtrNull(player, "player.c.initPlayers, player");
     player->playerNo = i + 1;
-    // dir_t *stDir = getStartDir(i + 1,  numPlayers);
-    // player->dir = stDir;
     player->dir = getStartDir(i + 1, numPlayers);
     player->directionChanged = 0;
     player->alive = 1;
@@ -55,7 +53,7 @@ void chooseDirection(player_t *player, gSt_t *game, int aiSchema, int randomness
       pickRandomSurvDir(player, randomness, game);
       return;
     case 3:
-      maximiseSpaceAhead(player, game, movesAhead);
+      maximiseSpaceAhead(player, game);
       return;
     default:
       printf("AI schema not applicable, choosing pickRandomValidDir\n");
@@ -67,12 +65,14 @@ void chooseDirection(player_t *player, gSt_t *game, int aiSchema, int randomness
 // Set the direction of the player (used for human players)
 // Sets direction assuming it is valid (not going back on itself)
 void setHumanDirection(player_t *player, dir_t *newDir) {
+  dir_t *current = player->dir;
   if (!(player->directionChanged) && !(player->aiSchema)) {
-    dir_t *current = player->dir;
     player->dir = newDir;
     player->directionChanged = 1;
-    free(current);
+  } else {
+
   }
+  free(current);
   return;
 }
 
@@ -120,5 +120,6 @@ void freePlayers(allPlayers_t *allPlayers) {
     free(onePlayer->dir);
     free(onePlayer);
   }
+  free(allPlayers->all);
   return;
 }

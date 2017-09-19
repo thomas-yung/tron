@@ -135,26 +135,6 @@ player_t *findWinner(gSt_t *gameStatus) {
   return NULL;
 }
 
-// A method stating if a direction change is valid
-// A move is valid if the player does not turn back on itself
-// int isValidDir(dir_t *current, dir_t *newDir) {
-//   int8_t currentDX = current->dX;
-//   int8_t currentDY = current->dY;
-//
-//   if (!currentDX) {
-//     // Player is facing vertically
-//     if (currentDY != -1 * (newDir->dY)) {
-//       return 1;
-//     }
-//   } else if (!currentDY) {
-//     // Player is facing horizontally
-//     if (currentDX != -1 * (newDir->dX)) {
-//       return 1;
-//     }
-//   }
-//   return 0;
-// }
-
 // Returns 0 if the dirNums are invalid as succcessive turns or there is
 // no change
 int isValidDirNum(dirNum_t current, dirNum_t newDirNum) {

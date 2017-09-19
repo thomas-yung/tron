@@ -13,6 +13,7 @@ dir_t **allSurvivalTurns(player_t *player, int *numResults, gSt_t *g);
 void pickRandomValidDir(player_t *player, int randomness);
 void pickRandomSurvDir(player_t *player, int randomness, gSt_t *g);
 
-void maximiseSpaceAhead(player_t *player, gSt_t *gameStatus, int movesAhead);
+int spacesAheadAfter(player_t *player, gSt_t *gameStatus, int dX, int dY);
+void maximiseSpaceAhead(player_t *player, gSt_t *gameStatus);
 
 #endif

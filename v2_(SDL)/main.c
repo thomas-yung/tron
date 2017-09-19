@@ -18,8 +18,6 @@ int numHumans;
 int numRobots;
 int numPlayers;
 int aiSchema;
-int FPS;
-int holeFreq;
 int boardDim;
 int randomness;
 
@@ -33,33 +31,23 @@ gSt_t *gameStatus;
 // main executable
 int main(int argc, char **argv) {
 
-  int c;
-  int *ps = &c;
-  *ps = 10;
-
-  printf("%d\n", c);
-
-  if (argc == 8) {
+  if (argc == 6) {
     // Correct number of command-line arguments given
     numHumans = atoi(argv[1]);
     assert(numHumans >= 0 && numHumans <= 2);
     numRobots = atoi(argv[2]);
     numPlayers = numHumans + numRobots;
     aiSchema = atoi(argv[3]);
-    FPS = atoi(argv[4]);
-    holeFreq = atoi(argv[5]);
-    boardDim = atoi(argv[6]);
-    randomness = atoi(argv[7]);
+    boardDim = atoi(argv[4]);
+    randomness = atoi(argv[5]);
   } else {
     // pollUserForParameters();
     printf("Let's pretend the parameters are in...\n");
     numHumans = 0;
-    numRobots = 100;
+    numRobots = 250;
     numPlayers = numHumans + numRobots;
-    aiSchema = 2;
-    FPS = 16;
-    holeFreq = 10;
-    boardDim = 100;
+    aiSchema = 3;
+    boardDim = 900;
     randomness = 20;
   }
 
@@ -79,10 +67,6 @@ void pollUserForParameters() {
   scanf("%d", &numRobots);
   printf("Enter AI schema (0 to 1 inclusive)");
   scanf("%d", &aiSchema);
-  printf("Enter refresh rate (Reccomended 16): ");
-  scanf("%d", &FPS);
-  printf("Enter frequency of holes (Reccomended 5): ");
-  scanf("%d", &holeFreq);
   printf("Enter board height: ");
   scanf("%d", &boardDim);
   printf("Enter randomness up to 100pc (what pc of the time does the AI turn): ");
@@ -115,6 +99,8 @@ void initialise() {
   putPlayersOnBoard(gameStatus);
 
   // Initialise graphics
+  // Initialise library, create window and renderer
+  // and set texture filtering (to linear)
   gameStatus->graphics = initGraphicsStruct();
   if (!initGUI(gameStatus->graphics, SCREEN_WIDTH, SCREEN_HEIGHT)) {
     printf("Could not initialise GUI, quitting...\n");
@@ -130,8 +116,6 @@ void initialise() {
 void gameLoop() {
   printf("\nStarting game, (in gameLoop)\n\n");
 
-  // Initialise library, create window and renderer
-  // and set texture filtering (to linear)
 
   // Draw initial board
   drawBoard(gameStatus);
@@ -168,6 +152,7 @@ void gameLoop() {
     printf("Tie\n");
   }
 
+  SDL_Delay(3000);
 }
 
 void freeMemory() {

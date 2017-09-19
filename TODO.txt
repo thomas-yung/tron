@@ -1,4 +1,14 @@
-Add an AI :):)
+Valgrind report:
+==4430== 4,654 bytes in 2,327 blocks are definitely lost in loss record 121 of 124
+==4430==    at 0x4C2FB45: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4430==    by 0x109DC1: dirFromDirNum (util.c:167)
+==4430==    by 0x10AE92: allSurvivalTurns (aiSchemas.c:34)
+==4430==    by 0x10B07B: pickRandomSurvDir (aiSchemas.c:84)
+==4430==    by 0x10A0DF: chooseDirection (player.c:55)
+==4430==    by 0x10A1BD: movePlayer (player.c:86)
+==4430==    by 0x10957D: gameLoop (main.c:153)
+==4430==    by 0x1091D2: main (main.c:68)
+
 
 End screen
 
